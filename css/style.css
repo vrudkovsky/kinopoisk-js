@@ -7,3 +7,26 @@ img {
     margin: 15px 0;
     text-align: center;
 }
+
+/* .spinner {
+    margin: 0 auto;
+} */
+
+.spinner {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border: 10px solid;
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: #555555;
+    border-top-color: #aaaaaa;
+    border-bottom-color: #000000;
+    animation: spin 750ms infinite linear;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}

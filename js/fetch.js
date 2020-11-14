@@ -1,5 +1,6 @@
 const searchForm = document.querySelector('#search-form');
 const movie = document.querySelector('#movies');
+const urlPoster = 'https://image.tmdb.org/t/p/w500';
 
 function apiSearch(event) {
     event.preventDefault();
@@ -9,21 +10,30 @@ function apiSearch(event) {
 
     fetch(server)
         .then(function(value) {
+            if (value.status !== 200) {
+                return Promise.reject(new Error(value.status));
+            }
             return value.json();
         })
         .then(function(output) {
+            console.log(output);
             let inner = '';
             output.results.forEach(function (item) {
                 let nameItem = item.name || item.title;
                 let date = item.first_air_date || item.release_date;
-                console.log(date);
-                inner = inner + `<div class="col-12 col-md-4 col-xl-3">${nameItem} [${date}]</div>`;
+                let img = item.poster_path;
+                inner += `
+                <div class="col-12 col-md-4 col-xl-3 item">
+                    <img src="${urlPoster + img}"></img> 
+                    <h5>${nameItem} </h5>
+                </div>
+                `;
             });
             movie.innerHTML = inner;
         })
         .catch(function(reason) {
             movie.innerHTML = 'Upps! Something goes wrong!!!';
-            console.log('error: ', reason.status);
+            console.log(reason);
         });
         
 }

@@ -96,7 +96,8 @@ function showFullInfo() {
                 <p>Status: ${output.status}</p>
                 <p>Premiere: ${output.first_air_date || output.release_date}</p>
 
-        ${(output.last_episode_to_air) ? `<p>${output.number_of_seasons} season; ${output.last_episode_to_air.episode_number} episodes came out;</p>` : '' }
+                ${(output.last_episode_to_air) ? `<p>${output.number_of_seasons} season; ${output.last_episode_to_air.episode_number} episodes came out;</p>` : '' }
+                <p>${output.overview}</p>
 
             </div>
             `;

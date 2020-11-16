@@ -92,7 +92,12 @@ function showFullInfo() {
 
             </div>
             <div class="col-8">
-                
+                <p>Rating: ${output.vote_average}</p>
+                <p>Status: ${output.status}</p>
+                <p>Premiere: ${output.first_air_date || output.release_date}</p>
+
+        ${(output.last_episode_to_air) ? `<p>${output.number_of_seasons} season; ${output.last_episode_to_air.episode_number} episodes came out;</p>` : '' }
+
             </div>
             `;
 

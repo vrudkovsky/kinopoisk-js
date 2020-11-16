@@ -91,7 +91,9 @@ function showFullInfo() {
                  ${(output.homepage) ? `<p class='text-center'><a href="https://imdb.com/title/${output.homepage}">IMDB link</a></p>` : ''} 
 
             </div>
-            <div class="col-8">${output.overview}</div>
+            <div class="col-8">
+                
+            </div>
             `;
 
         })

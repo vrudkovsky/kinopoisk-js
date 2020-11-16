@@ -1,1 +1,1 @@
-# kinopoisk-js
+# Movies database search-js

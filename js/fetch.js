@@ -64,11 +64,45 @@ function addEventMedia() {
 }
 
 function showFullInfo() {
-    console.log(this);
+    // console.dir(this.dataset.type);
+    let url = '';
+    if(this.dataset.type === 'movie') {
+        url = 'https://api.themoviedb.org/3/movie/'+ this.dataset.id +'?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US';
+    } else if(this.dataset.type === 'tv') {
+        url = 'https://api.themoviedb.org/3/tv/'+ this.dataset.id +'?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US';
+    } else {
+        movie.innerHTML = '<h2 class="col-12 text-center text-danger">Error occured please try again later</h2>'
+    }
+
+    fetch(url)
+        .then(function(value) {
+            if (value.status !== 200) {
+                return Promise.reject(new Error(value.status));
+            } 
+            return value.json();
+        })
+        .then(function(output) {
+            console.log(output);
+            movie.innerHTML = `
+            <h4 class="col-12 text-center text-info">${output.name || output.title}</h4>
+            <div class="col-4">
+                 <img src='${urlPoster + output.poster_path}' alt='${output.name || output.title}'>
+                 ${(output.homepage) ? `<p class='text-center'><a href="${output.homepage}" target="_blank">Official page</a></p>` : ''} 
+                 ${(output.homepage) ? `<p class='text-center'><a href="https://imdb.com/title/${output.homepage}">IMDB link</a></p>` : ''} 
+
+            </div>
+            <div class="col-8">${output.overview}</div>
+            `;
+
+        })
+        .catch(function(reason) {
+            movie.innerHTML = 'Upps! Something goes wrong!!!';
+            console.log(reason);
+        });
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Yeeaar!!! Has been loaded');
+    console.log('Page has been loaded');
     
     fetch('https://api.themoviedb.org/3/trending/all/day?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011')
     .then(function(value) {

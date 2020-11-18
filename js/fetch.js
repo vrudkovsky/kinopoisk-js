@@ -13,6 +13,8 @@ function apiSearch(event) {
     const server = 'https://api.themoviedb.org/3/search/multi?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US&query=' + searchText;
     movie.innerHTML = '<div class="spinner"></div>';
     
+
+
     fetch(server)
         .then(function(value) {
             if (value.status !== 200) {
@@ -21,6 +23,7 @@ function apiSearch(event) {
             return value.json();
         })
         .then(function(output) {
+            // console.log('output: ', output);
             let inner = '<h2 class="col-12 text-center text-info">Search results</h2>';
             if (output.results.length === 0) {
                 inner = '<h2 class="col-12 text-center  text-info">There is no result on your search</h2>';
@@ -64,7 +67,6 @@ function addEventMedia() {
 
 function showFullInfo() {
     let url = '';
-
     if(this.dataset.type === 'movie') {
         url = 'https://api.themoviedb.org/3/movie/'+ this.dataset.id +'?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US';
     } else if(this.dataset.type === 'tv') {
@@ -72,7 +74,10 @@ function showFullInfo() {
     } else {
         movie.innerHTML = '<h2 class="col-12 text-center text-danger">Error occured please try again later</h2>';
     }
-    
+
+    const typeMadia = this.dataset.type;
+    const idMedia = this.dataset.id;
+
     fetch(url)
         .then(function(value) {
             if (value.status !== 200) {
@@ -99,15 +104,13 @@ function showFullInfo() {
             <div class="youtube"></div>
             </div>
             `;
-            
-            getVideo();
-            console.log(this);
-                
-            })	
-            .catch(function(reason) {
-                movie.innerHTML = 'Upps! Something goes wrong!!!';
-                console.log(reason);
-            });
+            getVideo(typeMadia, idMedia);
+        })	
+        .catch(function(reason) {
+            movie.innerHTML = 'Upps! Something goes wrong!!!';
+            console.log(reason);
+        });
+
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -142,12 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             });
             movie.innerHTML = inner;
-
-            
-            
-
             addEventMedia();
-
         })
         .catch(function(reason) {
             movie.innerHTML = 'Upps! Something goes wrong!!!';
@@ -155,9 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-function getVideo() {
+function getVideo(type, id) {
+    console.log('id: ', id);
+    console.log('type: ', type);
+
     let youtube = movie.querySelector('.youtube');
-    fetch(`https://api.themoviedb.org/3/movie/524047/videos?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US`)
+    youtube.innerHTML = id;
+    fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=5ca5769f4cf4fbeb1cab5ffdc28fd011&language=en-US`)
         .then((value) => {
             if (value.status !== 200) {
                 return Promise.reject(new Error(value.status));
@@ -165,8 +167,17 @@ function getVideo() {
             return value.json();
         })
         .then((output) => {
-            // console.log(output);
-            // console.log(output.results[0]);
+            console.log('output: ', output);
+            let videoFrame = '<h5 class="text-info">Trailer</h5>';
+
+            if(output.results.length === 0) {
+                videoFrame = 'No video';
+            }
+
+            output.results.forEach((item) => {
+                videoFrame += '<iframe width="560" height="315" src="https://www.youtube.com/embed/'+ item.key + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+            })
+            youtube.innerHTML = videoFrame;
         })
         .catch(function(reason) {
             youtube.innerHTML = 'Upps! Something goes wrong!!!';
